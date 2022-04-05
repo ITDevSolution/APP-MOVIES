@@ -2,25 +2,29 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import styles from '../MovieDetails.module.css';
 import { getHttpClient } from '../utils/httpClien';
+import { Spinner } from './Spinner';
 
 
 export function MovieDetails() {
 
     const { movieId } = useParams()
     const [movie, setMovie] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+    
 
     useEffect(() => {
 
         getHttpClient(`/movie/${movieId}`)
-            .then(data => {
+            .then((data) => {
                 setMovie(data)
+                setIsLoading(false)
                 // console.log(data)
             })
 
     }, [movieId])
 
-    if (!movie) {
-        return null
+    if(isLoading) {
+        return <Spinner />
     }
 
     const imageUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
